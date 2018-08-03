@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/journeys"
+        android:title="Journeys"
+        android:orderInCategory="0"
+        android:icon="@mipmap/ic_bus" />
+
+    <item
+        android:title="Options">
+        <menu>
+            <item
+                android:id="@+id/Profile"
+                android:title="Profile"
+                android:orderInCategory="10"/>
+
+            <item android:id="@+id/Instructive"
+                android:title="Instructions"
+                android:orderInCategory="11"/>
+
+            <item android:id="@+id/About"
+                android:title="About"
+                android:orderInCategory="12"/>
+
+            <item android:id="@+id/Sign_out"
+                android:title="Sign Out"
+                android:orderInCategory="13"/>
+        </menu>
+    </item>
+
+</menu>
