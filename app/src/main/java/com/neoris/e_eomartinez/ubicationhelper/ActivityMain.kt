@@ -6,20 +6,22 @@ import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
+import com.google.android.gms.maps.*
 
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polygon
 import kotlinx.android.synthetic.main.activity_main.*
 
-class ActivityMain : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
-
+class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
+        NavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMapClickListener,
+        GoogleMap.OnPolygonClickListener, MapController.MapControllerCallback {
 
     private lateinit var mMap: GoogleMap
+    private lateinit var mMapCenterLatLng: LatLng
+    private lateinit var mController: MapController
+    private var mDefaultZoom = 17f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
         mainNaviView.itemIconTintList = null
         mainNaviView.setNavigationItemSelectedListener(this)
         val st = "";
+        initVars()
     }
 
     /**
@@ -57,6 +60,19 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
         mMap.addMarker(MarkerOptions().position(LatLng(25.700680, -100.259364)).title("Park").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_park)))
         mMap.addMarker(MarkerOptions().position(LatLng(25.701658, -100.258504)).title("Restaurant").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_restaurant)))
         mMap.addMarker(MarkerOptions().position(LatLng(25.699507, -100.259549)).title("Shop").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_shop)))
+        initListeners()
+    }
+    fun initVars() {
+        this.mMapCenterLatLng = LatLng(25.675437, -100.416310)
+        this.mController = MapController(this)
+    }
+    fun initListeners(){
+        this@ActivityMain.mMap.moveCamera(CameraUpdateFactory
+                .newLatLngZoom(this@ActivityMain.mMapCenterLatLng,
+                        this@ActivityMain.mDefaultZoom))
+        this@ActivityMain.mMap.setOnMapClickListener(this@ActivityMain)
+        this@ActivityMain.mMap.setOnPolygonClickListener(this@ActivityMain)
+        this@ActivityMain.mController.getZones()
     }
 
     private fun goToTimeLine(title: String){
@@ -77,4 +93,21 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
         mainDrawer.closeDrawer(GravityCompat.START)
         return true
     }
+
+    override fun onMapClick(p0: LatLng?) {
+    }
+
+    override fun onPolygonClick(polygon: Polygon?) {
+        this.mController.updateIndex(polygon)
+    }
+
+    override fun onGetZones(lstZoneModels: ArrayList<Models.Zone>) {
+        for (zone in lstZoneModels) {
+            zone.getPolygon(this.mMap)
+        }
+    }
+
+    override fun onCurrentZoneSelected(zoneModel: Models.Zone?) {
+    }
+
 }
