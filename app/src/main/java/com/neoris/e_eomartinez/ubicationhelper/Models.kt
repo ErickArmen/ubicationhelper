@@ -9,8 +9,7 @@ import com.google.android.gms.maps.model.PolygonOptions
 class Models {
     data class Point(var latitude: Double, var longitude: Double)
     data class Zone(var id: Number, var name: String, var description: String, var polygon: Polygon?,
-                    var color: String, var points: ArrayList<Point>){
-
+                    var color: String, var points: ArrayList<Point>, var places: ArrayList<Place>){
         fun getPolygon(map: GoogleMap?): Polygon? {
             if (polygon == null) {
                 var polygonOptions : PolygonOptions = PolygonOptions()
@@ -25,4 +24,6 @@ class Models {
             return polygon;
         }
     }
+    data class Place(var title: String, var latitude: Double, var longitude: Double,
+                     var iconResource: Int )
 }

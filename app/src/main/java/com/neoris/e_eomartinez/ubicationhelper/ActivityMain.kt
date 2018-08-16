@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
+import android.util.Log
 import android.view.MenuItem
 import com.google.android.gms.maps.*
 
@@ -21,7 +22,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     private lateinit var mMap: GoogleMap
     private lateinit var mMapCenterLatLng: LatLng
     private lateinit var mController: MapController
-    private var mDefaultZoom = 17f
+    private var mDefaultZoom = 14f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,23 +50,14 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
-        // Add a marker in Sydney and move the camera
-        val neoris = LatLng(25.699820, -100.261592)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(25.699507, -100.259), 16f))
-        mMap.addMarker(MarkerOptions().position(neoris).title("Bus Station").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_bus)))
-        mMap.addMarker(MarkerOptions().position(LatLng(25.698283, -100.260168)).title("Coffee Shop").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_coffee)))
-        mMap.addMarker(MarkerOptions().position(LatLng(25.700195, -100.256913)).title("Car Wash").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car)))
-        mMap.addMarker(MarkerOptions().position(LatLng(25.698874, -100.257411)).title("Church").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_church)))
-        mMap.addMarker(MarkerOptions().position(LatLng(25.700680, -100.259364)).title("Park").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_park)))
-        mMap.addMarker(MarkerOptions().position(LatLng(25.701658, -100.258504)).title("Restaurant").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_restaurant)))
-        mMap.addMarker(MarkerOptions().position(LatLng(25.699507, -100.259549)).title("Shop").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_shop)))
         initListeners()
     }
+
     fun initVars() {
         this.mMapCenterLatLng = LatLng(25.675437, -100.416310)
         this.mController = MapController(this)
     }
+
     fun initListeners(){
         this@ActivityMain.mMap.moveCamera(CameraUpdateFactory
                 .newLatLngZoom(this@ActivityMain.mMapCenterLatLng,
@@ -95,9 +87,10 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     }
 
     override fun onMapClick(p0: LatLng?) {
+        Log.d("position", "points.add(Models.Point("  + p0?.latitude.toString() + ", " + p0?.longitude.toString() + "))")
     }
 
-    override fun onPolygonClick(polygon: Polygon?) {
+    override fun onPolygonClick(polygon: Polygon) {
         this.mController.updateIndex(polygon)
     }
 
@@ -107,7 +100,12 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         }
     }
 
-    override fun onCurrentZoneSelected(zoneModel: Models.Zone?) {
-    }
+    override fun onCurrentZoneSelected(zoneModel: Models.Zone) {
+        for(place in zoneModel.places) {
+            mMap.addMarker(MarkerOptions().position(
+                    LatLng(place.latitude, place.longitude)).title(place.title)
+                    .icon(BitmapDescriptorFactory.fromResource(place.iconResource)))
 
+        }
+    }
 }

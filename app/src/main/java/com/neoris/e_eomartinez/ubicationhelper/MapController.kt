@@ -6,8 +6,8 @@ import com.google.android.gms.maps.model.Polygon
 class MapController {
     private var mZIndex: Int = 0
     private lateinit var mLstZoneModels: ArrayList<Models.Zone>
-    private var mCurrentZoneSelected: Models.Zone? = null
-    private var mControllerCallback: MapControllerCallback? = null
+    private lateinit var mCurrentZoneSelected: Models.Zone
+    private lateinit var mControllerCallback: MapControllerCallback
 
     constructor(controllerCallback: MapControllerCallback) {
         this.mControllerCallback = controllerCallback
@@ -24,12 +24,12 @@ class MapController {
         return this.mZIndex
     }
 
-    fun updateIndex(polygon: Polygon?) {
-        polygon?.setZIndex(upZIndex().toFloat())
+    fun updateIndex(polygon: Polygon) {
+        polygon.setZIndex(upZIndex().toFloat())
         for (model in this.mLstZoneModels) {
-            if (model.getPolygon(null)?.id.equals(polygon?.getId(), true)) {
+            if (model.getPolygon(null)?.id.equals(polygon.getId(), true)) {
                 this.mCurrentZoneSelected = model
-                this.mControllerCallback!!.onCurrentZoneSelected(this.mCurrentZoneSelected)
+                this.mControllerCallback.onCurrentZoneSelected(this.mCurrentZoneSelected)
                 break
             }
         }
@@ -37,6 +37,6 @@ class MapController {
 
     interface MapControllerCallback {
         fun onGetZones(lstZoneModels: ArrayList<Models.Zone>)
-        fun onCurrentZoneSelected(zoneModel: Models.Zone?)
+        fun onCurrentZoneSelected(zoneModel: Models.Zone)
     }
 }
