@@ -14,16 +14,30 @@
         android:id="@+id/mainDrawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:openDrawer="start"
+
         tools:context=".ActivityMain">
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ActivityMain" />
+            android:layout_height="match_parent">
 
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".ActivityMain" />
+
+            <Button
+                android:id="@+id/btn_show_last_route"
+                android:textAllCaps="false"
+                android:text="Last Route"
+                android:alpha="0.5"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
 
         <android.support.design.widget.NavigationView
             android:id="@+id/mainNaviView"
@@ -36,6 +50,5 @@
             app:menu="@menu/menu_drawer" />
 
     </android.support.v4.widget.DrawerLayout>
-
 
 </android.support.design.widget.CoordinatorLayout>
