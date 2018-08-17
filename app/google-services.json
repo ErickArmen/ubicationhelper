@@ -1,0 +1,138 @@
+{
+  "project_info": {
+    "project_number": "259730274519",
+    "firebase_url": "https://ubicationhelper.firebaseio.com",
+    "project_id": "ubicationhelper",
+    "storage_bucket": "ubicationhelper.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259730274519:android:e7df72243b0d51ee",
+        "android_client_info": {
+          "package_name": "com.neoris.e_eomartinez.ubicationhelper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259730274519-9eajvkqudusef7glteplnl4th224t499.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.neoris.e_eomartinez.ubicationhelper",
+            "certificate_hash": "ce87a6d6851e71e018183ec1ed84ea022bb22981"
+          }
+        },
+        {
+          "client_id": "259730274519-151d8j0u8oq0f6v9o3ggeno78vk3j914.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.neoris.e_eomartinez.ubicationhelper",
+            "certificate_hash": "6b37f9fd18e8c16346395833ad88645c43901d67"
+          }
+        },
+        {
+          "client_id": "259730274519-9g3eq9e6vvsov9rbj99dhqjgirhtr67r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwa9R3zywGLfbhahcssspFFswX-9r_0q8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "259730274519-9g3eq9e6vvsov9rbj99dhqjgirhtr67r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259730274519:android:ca5ee3d0bd6bd750",
+        "android_client_info": {
+          "package_name": "com.neoris.e_eomartinez.ubicationhelperc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259730274519-9g3eq9e6vvsov9rbj99dhqjgirhtr67r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwa9R3zywGLfbhahcssspFFswX-9r_0q8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259730274519:android:66f27457b5f92299",
+        "android_client_info": {
+          "package_name": "com.neoris.e_eomartinez.ubicationhelpersender"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259730274519-7sjeb14qd2a9h2ao1qr4efppnm94qg33.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.neoris.e_eomartinez.ubicationhelpersender",
+            "certificate_hash": "ce87a6d6851e71e018183ec1ed84ea022bb22981"
+          }
+        },
+        {
+          "client_id": "259730274519-9g3eq9e6vvsov9rbj99dhqjgirhtr67r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwa9R3zywGLfbhahcssspFFswX-9r_0q8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "259730274519-9g3eq9e6vvsov9rbj99dhqjgirhtr67r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
