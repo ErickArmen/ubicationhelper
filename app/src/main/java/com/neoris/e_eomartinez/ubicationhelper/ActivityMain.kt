@@ -5,15 +5,25 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
+import android.support.v7.widget.SearchView
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import com.google.android.gms.maps.*
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.Polygon
 import kotlinx.android.synthetic.main.activity_main.*
+import android.view.MenuInflater
+import android.R.string.cancel
+import android.content.DialogInterface
+import android.text.InputType
+import android.support.v4.widget.SearchViewCompat.setInputType
+import android.support.v7.app.AlertDialog
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import com.google.android.gms.maps.model.*
+import com.google.maps.android.PolyUtil
+
 
 class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         NavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMapClickListener,
@@ -22,12 +32,13 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     private lateinit var mMap: GoogleMap
     private lateinit var mMapCenterLatLng: LatLng
     private lateinit var mController: MapController
-    private var mDefaultZoom = 14f
+    private var mDefaultZoom = 13f
+    private var mLstMarkersPlace : ArrayList<Marker> = ArrayList()
+    private var mMarkerPostalCode: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
@@ -74,16 +85,36 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val x = item.order
-        when(x){
-
-            0 -> {
+        when(item.itemId){
+            R.id.action_search ->{
+                buildPostalCodeDialog()
+            }
+            R.id.journeys -> {
                 goToTimeLine(item.title.toString())
             }
         }
 
         mainDrawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun buildPostalCodeDialog(): Unit {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(resources.getString(R.string.search))
+        val input = EditText(this)
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        builder.setView(input)
+        builder.setPositiveButton(resources.getString(android.R.string.ok),
+                DialogInterface.OnClickListener {
+                    dialog, which ->
+                    mController.validatePostalCode(this, input.text.toString(), mMap)
+                })
+        builder.setNegativeButton(resources.getString(android.R.string.cancel),
+                DialogInterface.OnClickListener {
+                    dialog, which -> dialog.cancel()
+                })
+
+        builder.show()
     }
 
     override fun onMapClick(p0: LatLng?) {
@@ -101,11 +132,48 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     }
 
     override fun onCurrentZoneSelected(zoneModel: Models.Zone) {
+        for (marker in this.mLstMarkersPlace){
+            marker.remove();
+        }
+        this.mLstMarkersPlace.clear()
         for(place in zoneModel.places) {
+            this.mLstMarkersPlace.add(
             mMap.addMarker(MarkerOptions().position(
                     LatLng(place.latitude, place.longitude)).title(place.title)
-                    .icon(BitmapDescriptorFactory.fromResource(place.iconResource)))
+                    .icon(BitmapDescriptorFactory.fromResource(place.iconResource))))
 
         }
+    }
+
+    override fun onPostalCodeValidationResponse(postalCode: String, position: LatLng, isInZone: Boolean,
+                                                zone: Models.Zone?) {
+        try {
+            this.mMarkerPostalCode?.remove()
+            this.mMarkerPostalCode = mMap.addMarker(MarkerOptions().position(position).title(postalCode))
+            if (isInZone)
+                buildPostalCodeDetailDialog(postalCode + " pertenece a la zona: " + zone?.name)
+            else
+                buildPostalCodeDetailDialog("No pertenece a ninguna zona")
+        }catch (ex: Exception){
+            ex.toString()
+        }
+    }
+
+    private fun buildPostalCodeDetailDialog(detail: String): Unit{
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(resources.getString(R.string.search))
+        val input = TextView(this)
+        input.text = detail
+        builder.setView(input)
+        builder.setPositiveButton(resources.getString(android.R.string.ok),
+                DialogInterface.OnClickListener {
+                    dialog, which ->
+                    dialog.dismiss()
+                })
+        builder.setNegativeButton(resources.getString(android.R.string.cancel),
+                DialogInterface.OnClickListener {
+                    dialog, which -> dialog.cancel()
+                })
+        builder.show()
     }
 }
