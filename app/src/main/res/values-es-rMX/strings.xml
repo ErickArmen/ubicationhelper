@@ -5,4 +5,7 @@
     <string name="search">Search by Postal Code</string>
     <string name="postal_code">Código postal %1$s %2$s </string>
     <string name="no_result">No se encontraron resultados.</string>
+    <string name="zone_selected">Zona seleccionada: %1$s</string>
+    <string name="no_zone_selected">Ninguna zona seleccionada.</string>
+    <string name="fill_input">No se ingresó ningún código postal</string>
 </resources>

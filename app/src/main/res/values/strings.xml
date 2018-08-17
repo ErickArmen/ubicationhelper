@@ -5,4 +5,7 @@
     <string name="postal_code">Código postal %1$s %2$s </string>
     <string name="no_result">No results found</string>
     <string name="elapsed_time">%1$s mins</string>
+    <string name="zone_selected">Selected zone: %1$s</string>
+    <string name="no_zone_selected">No zone selected</string>
+    <string name="fill_input">Fill the postal code input</string>
 </resources>
