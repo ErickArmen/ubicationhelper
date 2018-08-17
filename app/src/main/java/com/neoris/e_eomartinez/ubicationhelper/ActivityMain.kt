@@ -180,12 +180,16 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         val builder = AlertDialog.Builder(this)
         builder.setTitle(resources.getString(R.string.search))
         val input = EditText(this)
-        input.inputType = InputType.TYPE_CLASS_TEXT
+        input.inputType = InputType.TYPE_CLASS_NUMBER
         builder.setView(input)
         builder.setPositiveButton(resources.getString(android.R.string.ok),
                 DialogInterface.OnClickListener {
                     dialog, which ->
-                    mController.validatePostalCode(this, input.text.toString(), mMap)
+                    if (!input.text.isEmpty())
+                        mController.validatePostalCode(this, input.text.toString(), mMap)
+                    else
+                        Toast.makeText(this@ActivityMain,
+                                resources.getString(R.string.fill_input), Toast.LENGTH_SHORT).show()
                 })
         builder.setNegativeButton(resources.getString(android.R.string.cancel),
                 DialogInterface.OnClickListener {
@@ -210,6 +214,8 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     }
 
     override fun onCurrentZoneSelected(zoneModel: Models.Zone) {
+        this.lbl_zone_selected.text = resources.getString(R.string.zone_selected,
+                zoneModel.name)
         for (marker in this.mLstMarkersPlace){
             marker.remove();
         }
@@ -221,17 +227,20 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
                             .icon(BitmapDescriptorFactory.fromResource(place.iconResource))))
 
         }
+        this.mMarkerPostalCode?.remove()
     }
 
     override fun onPostalCodeValidationResponse(postalCode: String, position: LatLng, isInZone: Boolean,
                                                 zone: Models.Zone?) {
         try {
-            this.mMarkerPostalCode?.remove()
-            this.mMarkerPostalCode = mMap.addMarker(MarkerOptions().position(position).title(postalCode))
-            if (isInZone)
+            if (isInZone) {
                 buildPostalCodeDetailDialog(postalCode + " pertenece a la zona: " + zone?.name)
-            else
+                onCurrentZoneSelected(zone!!)
+                this.mMarkerPostalCode = mMap.addMarker(MarkerOptions().position(position).title(postalCode))
+            } else {
                 buildPostalCodeDetailDialog("No pertenece a ninguna zona")
+                this.lbl_zone_selected.text = resources.getString(R.string.no_zone_selected)
+            }
         }catch (ex: Exception){
             ex.toString()
         }
