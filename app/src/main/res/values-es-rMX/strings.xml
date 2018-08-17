@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">UbicationHelper</string>
     <string name="title_activity_main">Map</string>
     <string name="search">Search by Postal Code</string>
     <string name="postal_code">Código postal %1$s %2$s </string>
-    <string name="no_result">No results found</string>
+    <string name="no_result">No se encontraron resultados.</string>
 </resources>

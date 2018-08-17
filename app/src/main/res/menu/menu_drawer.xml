@@ -13,6 +13,9 @@
     <item
         android:title="Options">
         <menu>
+            <item android:id="@+id/action_search"
+                android:title="@string/search"
+                android:icon="@android:drawable/ic_menu_search"/>
             <item
                 android:id="@+id/Profile"
                 android:title="Profile"
