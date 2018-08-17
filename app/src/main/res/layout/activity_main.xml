@@ -8,23 +8,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-
-
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/mainDrawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:openDrawer="start"
         tools:context=".ActivityMain">
-
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ActivityMain" />
-
-
         <android.support.design.widget.NavigationView
             android:id="@+id/mainNaviView"
             android:layout_width="240dp"
@@ -34,8 +29,5 @@
             app:headerLayout="@layout/main_header_drawer"
             app:insetForeground="@android:color/transparent"
             app:menu="@menu/menu_drawer" />
-
     </android.support.v4.widget.DrawerLayout>
-
-
 </android.support.design.widget.CoordinatorLayout>
