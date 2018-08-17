@@ -1,6 +1,7 @@
 package com.neoris.e_eomartinez.ubicationhelper
 
 import android.content.Context
+import android.widget.Toast
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Polygon
@@ -52,7 +53,9 @@ class MapController {
         }
     }
 
+    var count = 0;
     fun validatePostalCode(context: Context,postalCode: String,googleMap: GoogleMap ) {
+        count += 1
         val service = this.mRetrofit.create<GMapsService>(GMapsService::class.java)
         val fullPostalCode = context.resources.getString(R.string.postal_code,postalCode, "");
         service.requestAddress(fullPostalCode)
@@ -75,10 +78,17 @@ class MapController {
                             break;
                         }
                     }
+                    count = 0;
                     mControllerCallback.onPostalCodeValidationResponse(fullPostalCode, position,
                             isInZones, postalCodeZone)
                 } catch (ex: Exception) {
-                    ex.toString()
+                    if (count <= 3)
+                        validatePostalCode(context,postalCode,googleMap )
+                    else {
+                        count = 0
+                        Toast.makeText(context, context.resources.getString(R.string.no_result),
+                                Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
             override fun onFailure(call: Call<JsonObject>?, t: Throwable?) {}
