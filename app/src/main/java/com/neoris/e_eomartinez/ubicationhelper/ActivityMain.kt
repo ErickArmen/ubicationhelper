@@ -6,45 +6,35 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
-import android.support.v7.widget.SearchView
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import com.google.android.gms.maps.*
 
-import android.view.MenuInflater
-import android.R.string.cancel
 import android.content.DialogInterface
 import android.text.InputType
-import android.support.v4.widget.SearchViewCompat.setInputType
 import android.support.v7.app.AlertDialog
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import com.google.android.gms.maps.model.*
-import com.google.maps.android.PolyUtil
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
-import com.google.firebase.firestore.QueryDocumentSnapshot
 import kotlinx.android.synthetic.main.activity_main.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnPolygonClickListener,
         MapController.MapControllerCallback {
-
 
     private lateinit var mMap: GoogleMap
     private val firestore = FirebaseFirestore.getInstance()
@@ -68,6 +58,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         mainNaviView.itemIconTintList = null
         mainNaviView.setNavigationItemSelectedListener(this)
         btn_show_last_route.setOnClickListener(this)
+        tv_elapsed_time.text = ""
         initVars()
     }
 
@@ -153,6 +144,13 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
             if (it.isSuccessful){
                 val size = it.result.size()
                 val document = it.result.documents[size-1]
+                val dateInit = document.data?.keys?.min()?.toLong()
+                val dateLast = document.data?.keys?.max()?.toLong()
+                val diffDate = dateLast?.minus(dateInit!!)
+                Log.i("TESTING", "$dateInit $dateLast $diffDate")
+                val sdf = SimpleDateFormat("mm:ss", Locale.getDefault())
+                tv_elapsed_time.setText(getString(R.string.elapsed_time, sdf.format(diffDate)))
+
                 document.data?.values?.forEach {
                     val location = it as GeoPoint
                     polyLine.add(LatLng(location.latitude, location.longitude))
@@ -255,5 +253,11 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
                     dialog, which -> dialog.cancel()
                 })
         builder.show()
+    }
+
+    override fun onClick(p0: View?) {
+        when(p0?.id){
+            R.id.btn_show_last_route ->{showLastRoute()}
+        }
     }
 }

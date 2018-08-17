@@ -13,7 +13,7 @@
         android:id="@+id/mainDrawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:openDrawer="start"
+
         tools:context=".ActivityMain">
 
         <FrameLayout
@@ -35,6 +35,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_elapsed_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/elapsed_time"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="60dp"/>
 
         </FrameLayout>
 
