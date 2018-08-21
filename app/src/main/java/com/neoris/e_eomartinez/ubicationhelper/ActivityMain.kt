@@ -254,7 +254,8 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
                 this.mMarkerPostalCode = mMap.addMarker(MarkerOptions().position(position).title(postalCode))
             } else {
                 buildPostalCodeDetailDialog("No pertenece a ninguna zona")
-                this.lbl_zone_selected.text = resources.getString(R.string.no_zone_selected)
+//                this.lbl_zone_selected.text = resources.getString(R.string.no_zone_selected)
+                this.mMarkerPostalCode?.remove()
             }
         }catch (ex: Exception){
             ex.toString()
