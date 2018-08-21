@@ -103,6 +103,13 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         this@ActivityMain.mMap.setOnMapClickListener(this@ActivityMain)
         this@ActivityMain.mMap.setOnPolygonClickListener(this@ActivityMain)
         this@ActivityMain.mController.getZones()
+        firestore.collection("Zones").get().addOnCompleteListener {
+            if (it.isSuccessful){
+                this@ActivityMain.mController.fillZones(it.result.documents)
+            }else{
+                Log.i("===============Error", "Error getting documents" , it.exception)
+            }
+        }
     }
 
     private fun goToTimeLine(title: String){
