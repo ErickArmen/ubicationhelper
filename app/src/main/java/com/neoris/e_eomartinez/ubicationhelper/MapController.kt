@@ -33,12 +33,22 @@ class MapController {
 
     fun fillZones(documents: List<DocumentSnapshot>){
         documents.forEach {
-            var zone = Models.Zone( 0,it["Name"].toString(),
+            var zone = Models.Zone( (it["Id"] as Long).toInt(),it["Name"].toString(),
                     it["Description"].toString(),null, it["Color"].toString(),
                     getPoints(it), getPlaces(it));
             this.mLstZoneModels.add(zone)
         }
         this.mControllerCallback.onGetZones(mLstZoneModels)
+        try {
+            this.mLstZoneModels.forEach {
+                if (it.id == mCurrentZoneSelected?.id){
+                    mCurrentZoneSelected = it;
+                    mControllerCallback.onCurrentZoneSelected(mCurrentZoneSelected)
+                }
+            }
+        } catch (ex: Exception){
+            ex.toString();
+        }
     }
 
     fun getPlaces(zoneDocument: DocumentSnapshot): ArrayList<Models.Place>{
