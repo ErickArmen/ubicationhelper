@@ -22,12 +22,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.database.*
+import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -100,7 +97,17 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
                         this@ActivityMain.mDefaultZoom))
         this@ActivityMain.mMap.setOnMapClickListener(this@ActivityMain)
         this@ActivityMain.mMap.setOnPolygonClickListener(this@ActivityMain)
-        this@ActivityMain.mController.getZones()
+//        getZones()
+        firestore.collection("Zones")
+                .addSnapshotListener(object: EventListener<QuerySnapshot>{
+                    override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                        mController.clearMap(mMap)
+                        getZones()
+                    }
+                })
+    }
+
+    private fun getZones(){
         firestore.collection("Zones").get().addOnCompleteListener {
             if (it.isSuccessful){
                 this@ActivityMain.mController.fillZones(it.result.documents)

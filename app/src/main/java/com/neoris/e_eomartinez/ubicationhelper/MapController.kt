@@ -28,12 +28,7 @@ class MapController {
         this.mControllerCallback = controllerCallback
         this.mRetrofit = Retrofit.Builder().baseUrl("http://maps.googleapis.com/")
                 .addConverterFactory(GsonConverterFactory.create()).build()
-    }
-
-    fun getZones() {
-        this.mLstZoneModels = DummyData().zones()
-        this.mZIndex =  mLstZoneModels.size
-//        this.mControllerCallback.onGetZones(mLstZoneModels)
+        this.mLstZoneModels = ArrayList();
     }
 
     fun fillZones(documents: List<DocumentSnapshot>){
@@ -147,6 +142,13 @@ class MapController {
         fun onGetZones(lstZoneModels: ArrayList<Models.Zone>)
         fun onCurrentZoneSelected(zoneModel: Models.Zone)
         fun onPostalCodeValidationResponse(postalCode: String, position: LatLng, isInZone: Boolean, zone: Models.Zone?)
+    }
+
+    fun clearMap(googleMap: GoogleMap): Unit{
+            this.mLstZoneModels.forEach {
+                it.getPolygon(googleMap)?.remove()
+            }
+        this.mLstZoneModels.clear()
     }
 
 }
