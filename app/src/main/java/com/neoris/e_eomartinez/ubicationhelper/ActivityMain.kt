@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 
 import android.content.DialogInterface
+import android.os.Handler
 import android.text.InputType
 import android.support.v7.app.AlertDialog
 import android.widget.EditText
@@ -22,15 +23,12 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.database.*
+import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
@@ -39,17 +37,20 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
 
     private lateinit var mMap: GoogleMap
     private val firestore = FirebaseFirestore.getInstance()
-    private val polyLine = PolylineOptions().width(4f).color(Color.BLUE)
     private var line: Polyline? = null
     private lateinit var mMapCenterLatLng: LatLng
     private lateinit var mController: MapController
     private var mDefaultZoom = 13f
+    private val database = FirebaseDatabase.getInstance().getReference()
     private var mLstMarkersPlace : ArrayList<Marker> = ArrayList()
     private var mMarkerPostalCode: Marker? = null
+    private var keyMap = HashMap<String, String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        getDriversKeys()
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -59,6 +60,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         mainNaviView.itemIconTintList = null
         mainNaviView.setNavigationItemSelectedListener(this)
         btn_show_last_route.setOnClickListener(this)
+        btn_clear.setOnClickListener(this)
         tv_elapsed_time.text = ""
         initVars()
     }
@@ -75,7 +77,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         initListeners()
-        writeInFireB(googleMap)
+        Handler().postDelayed({listenFirebase(googleMap)}, 1000)
 
         /*val neoris = LatLng(25.699820, -100.261592)
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(25.699507, -100.259), 16f))
@@ -109,15 +111,54 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         startActivity(intent)
     }
 
-    private fun writeInFireB(googleMap: GoogleMap){
+    private fun listenFirebase(googleMap: GoogleMap){
 
-        val database = FirebaseDatabase.getInstance().getReference()
-        val marker1 = googleMap.addMarker(MarkerOptions().position(LatLng(0.0, 0.0))
+        /*val marker1 = googleMap.addMarker(MarkerOptions().position(LatLng(0.0, 0.0))
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking)))
         val marker2 = googleMap.addMarker(MarkerOptions().position(LatLng(0.0, 0.0))
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking)))
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking)))*/
 
-        database.child("driver_1").addValueEventListener(object: ValueEventListener{
+        val map = HashMap<String, Marker>()
+        keyMap.forEach {
+            map.put(it.value, googleMap.addMarker(MarkerOptions().position(LatLng(0.0, 0.0))
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking))))
+        }
+
+        /*for (i in 0..keyMapSize){
+            map.put(keyMap[i], googleMap.addMarker(MarkerOptions().position(LatLng(0.0, 0.0))
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking))))
+        }*/
+
+        database.addChildEventListener(object: ChildEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                val location = p0.getValue(Location::class.java)!!
+                map[p0.key]?.position = LatLng(location.lat, location.lon)
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+        })
+
+        /*keyMap.values.forEach {
+            database.child()
+        }
+
+        database.child(keyMap[])*/
+
+
+
+
+        /*database.child("driver_1").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.getValue(Location::class.java) != null){
                     val location = p0.getValue(Location::class.java)!!
@@ -136,23 +177,26 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
 
             }
             override fun onCancelled(p0: DatabaseError) {}
-        })
+        })*/
     }
 
-    private fun showLastRoute(){
+    private fun showLastRoute() {
         line?.remove()
+        val polyLine = PolylineOptions().width(4f).color(Color.BLUE)
         firestore.collection("locations").get().addOnCompleteListener {
             if (it.isSuccessful){
                 val size = it.result.size()
-                val document = it.result.documents[size-1]
-                val dateInit = document.data?.keys?.min()?.toLong()
-                val dateLast = document.data?.keys?.max()?.toLong()
+                val document = it.result.documents[size-1] as QueryDocumentSnapshot
+                val dateInit = document.data.keys.min()?.toLong()
+                val dateLast = document.data.keys.max()?.toLong()
                 val diffDate = dateLast?.minus(dateInit!!)
                 Log.i("TESTING", "$dateInit $dateLast $diffDate")
                 val sdf = SimpleDateFormat("mm:ss", Locale.getDefault())
                 tv_elapsed_time.setText(getString(R.string.elapsed_time, sdf.format(diffDate)))
 
-                document.data?.values?.forEach {
+                val orderedMap = document.data.toSortedMap()
+
+                orderedMap.values.forEach {
                     val location = it as GeoPoint
                     polyLine.add(LatLng(location.latitude, location.longitude))
                 }
@@ -162,6 +206,45 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
             }
         }
     }
+
+    fun clearRoute() {
+        line?.remove()
+        tv_elapsed_time.text = ""
+        mMap.clear()
+        mController.getZones()
+    }
+
+    fun getDriversKeys(){
+
+        database.addListenerForSingleValueEvent(object: ValueEventListener{
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+                p0.children.forEach{
+                    keyMap.put(it.key!!, it.key!!)
+                }
+
+                /*p0.children.forEach {
+
+                    database.child(it.key!!).addValueEventListener(object: ValueEventListener{
+                        override fun onDataChange(p0: DataSnapshot) {
+                            val location = p0.getValue(Location::class.java)!!
+                            for (i in 0..100){
+                                map.get(i.toString())?.position = LatLng(location.lat, location.lon)
+                            }
+                            *//*googleMap.addMarker(MarkerOptions().position(LatLng(location.lat, location.lon)).
+                                    icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking)))*//*
+                        }
+
+                        override fun onCancelled(p0: DatabaseError) {}
+                    })
+                }*/
+            }
+
+            override fun onCancelled(p0: DatabaseError) {}
+        })
+    }
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
@@ -267,7 +350,8 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
 
     override fun onClick(p0: View?) {
         when(p0?.id){
-            R.id.btn_show_last_route ->{showLastRoute()}
+            R.id.btn_show_last_route -> showLastRoute()
+            R.id.btn_clear -> clearRoute()
         }
     }
 }
