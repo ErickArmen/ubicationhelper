@@ -77,7 +77,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         initListeners()
-        Handler().postDelayed({listenFirebase(googleMap)}, 1000)
+        Handler().postDelayed({listenFirebase()}, 3000)
 
         /*val neoris = LatLng(25.699820, -100.261592)
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(25.699507, -100.259), 16f))
@@ -103,13 +103,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         this@ActivityMain.mMap.setOnMapClickListener(this@ActivityMain)
         this@ActivityMain.mMap.setOnPolygonClickListener(this@ActivityMain)
         this@ActivityMain.mController.getZones()
-        firestore.collection("Zones").get().addOnCompleteListener {
-            if (it.isSuccessful){
-                this@ActivityMain.mController.fillZones(it.result.documents)
-            }else{
-                Log.i("===============Error", "Error getting documents" , it.exception)
-            }
-        }
+        getZones()
     }
 
     private fun goToTimeLine(title: String){
@@ -118,7 +112,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         startActivity(intent)
     }
 
-    private fun listenFirebase(googleMap: GoogleMap){
+    private fun listenFirebase(){
 
         /*val marker1 = googleMap.addMarker(MarkerOptions().position(LatLng(0.0, 0.0))
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking)))
@@ -126,8 +120,9 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking)))*/
 
         val map = HashMap<String, Marker>()
+        Log.i("TESTING", keyMap.size.toString())
         keyMap.forEach {
-            map.put(it.value, googleMap.addMarker(MarkerOptions().position(LatLng(0.0, 0.0))
+            map.put(it.value, mMap.addMarker(MarkerOptions().position(LatLng(0.0, 0.0))
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking))))
         }
 
@@ -218,7 +213,9 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         line?.remove()
         tv_elapsed_time.text = ""
         mMap.clear()
-        mController.getZones()
+        getZones()
+        getDriversKeys()
+        Handler().postDelayed({listenFirebase()}, 3000)
     }
 
     fun getDriversKeys(){
@@ -353,6 +350,16 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
                     dialog, which -> dialog.cancel()
                 })
         builder.show()
+    }
+
+    private fun getZones(){
+        firestore.collection("Zones").get().addOnCompleteListener {
+            if (it.isSuccessful){
+                this@ActivityMain.mController.fillZones(it.result.documents)
+            }else{
+                Log.i("===============Error", "Error getting documents" , it.exception)
+            }
+        }
     }
 
     override fun onClick(p0: View?) {
