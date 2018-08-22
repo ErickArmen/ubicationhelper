@@ -25,6 +25,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.firebase.database.*
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -96,14 +97,20 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         this.mController = MapController(this)
     }
 
-    fun initListeners(){
+    fun initListeners() {
         this@ActivityMain.mMap.moveCamera(CameraUpdateFactory
                 .newLatLngZoom(this@ActivityMain.mMapCenterLatLng,
                         this@ActivityMain.mDefaultZoom))
         this@ActivityMain.mMap.setOnMapClickListener(this@ActivityMain)
         this@ActivityMain.mMap.setOnPolygonClickListener(this@ActivityMain)
-        this@ActivityMain.mController.getZones()
-        getZones()
+//        getZones()
+        firestore.collection("Zones")
+                .addSnapshotListener(object: EventListener<QuerySnapshot>{
+                    override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                        mController.clearMap(mMap)
+                        getZones()
+                    }
+                })
     }
 
     private fun goToTimeLine(title: String){
@@ -131,7 +138,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking))))
         }*/
 
-        database.addChildEventListener(object: ChildEventListener{
+        database.addChildEventListener(object: ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
@@ -327,7 +334,8 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
                 this.mMarkerPostalCode = mMap.addMarker(MarkerOptions().position(position).title(postalCode))
             } else {
                 buildPostalCodeDetailDialog("No pertenece a ninguna zona")
-                this.lbl_zone_selected.text = resources.getString(R.string.no_zone_selected)
+//                this.lbl_zone_selected.text = resources.getString(R.string.no_zone_selected)
+                this.mMarkerPostalCode?.remove()
             }
         }catch (ex: Exception){
             ex.toString()

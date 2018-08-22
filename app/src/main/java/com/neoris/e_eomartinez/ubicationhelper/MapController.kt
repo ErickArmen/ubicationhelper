@@ -28,22 +28,27 @@ class MapController {
         this.mControllerCallback = controllerCallback
         this.mRetrofit = Retrofit.Builder().baseUrl("http://maps.googleapis.com/")
                 .addConverterFactory(GsonConverterFactory.create()).build()
-    }
-
-    fun getZones() {
-        this.mLstZoneModels = DummyData().zones()
-        this.mZIndex =  mLstZoneModels.size
-//        this.mControllerCallback.onGetZones(mLstZoneModels)
+        this.mLstZoneModels = ArrayList();
     }
 
     fun fillZones(documents: List<DocumentSnapshot>){
         documents.forEach {
-            var zone = Models.Zone( 0,it["Name"].toString(),
+            var zone = Models.Zone( (it["Id"] as Long).toInt(),it["Name"].toString(),
                     it["Description"].toString(),null, it["Color"].toString(),
                     getPoints(it), getPlaces(it));
             this.mLstZoneModels.add(zone)
         }
         this.mControllerCallback.onGetZones(mLstZoneModels)
+        try {
+            this.mLstZoneModels.forEach {
+                if (it.id == mCurrentZoneSelected?.id){
+                    mCurrentZoneSelected = it;
+                    mControllerCallback.onCurrentZoneSelected(mCurrentZoneSelected)
+                }
+            }
+        } catch (ex: Exception){
+            ex.toString();
+        }
     }
 
     fun getPlaces(zoneDocument: DocumentSnapshot): ArrayList<Models.Place>{
@@ -147,6 +152,13 @@ class MapController {
         fun onGetZones(lstZoneModels: ArrayList<Models.Zone>)
         fun onCurrentZoneSelected(zoneModel: Models.Zone)
         fun onPostalCodeValidationResponse(postalCode: String, position: LatLng, isInZone: Boolean, zone: Models.Zone?)
+    }
+
+    fun clearMap(googleMap: GoogleMap): Unit{
+            this.mLstZoneModels.forEach {
+                it.getPolygon(googleMap)?.remove()
+            }
+        this.mLstZoneModels.clear()
     }
 
 }
