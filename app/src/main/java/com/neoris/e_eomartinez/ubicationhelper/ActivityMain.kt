@@ -46,6 +46,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     private var mLstMarkersPlace : ArrayList<Marker> = ArrayList()
     private var mMarkerPostalCode: Marker? = null
     private var keyMap = HashMap<String, String>()
+    private lateinit var markerAnimator: MarkerAnimator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,6 +139,8 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking))))
         }*/
 
+        markerAnimator = MarkerAnimator(mMap)
+
         database.addChildEventListener(object: ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
@@ -148,6 +151,8 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val location = p0.getValue(Location::class.java)!!
                 map[p0.key]?.position = LatLng(location.lat, location.lon)
+                //markerAnimator.animateMarker(map[p0.key], LatLng(location.lat, location.lon))
+                //map[p0.key]?.rotation = location.bearing
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
