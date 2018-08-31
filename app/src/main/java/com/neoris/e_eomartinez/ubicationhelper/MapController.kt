@@ -63,17 +63,17 @@ class MapController {
                     (it.get("Point") as GeoPoint).longitude,
                     (it.get("Icon") as Long).toInt())
             if (place.iconResource == 0){
-                place.iconResource = R.mipmap.ic_park;
+                place.iconResource = R.mipmap.ic_construrama;
             } else if (place.iconResource == 1){
-                place.iconResource = R.mipmap.ic_restaurant;
+                place.iconResource = R.mipmap.ic_construrama;
             } else if (place.iconResource == 2){
-                place.iconResource = R.mipmap.ic_shop;
+                place.iconResource = R.mipmap.ic_construrama;
             } else if (place.iconResource == 3){
-                place.iconResource = R.mipmap.ic_bus;
+                place.iconResource = R.mipmap.ic_construrama;
             } else if (place.iconResource == 4){
-                place.iconResource = R.mipmap.ic_coffee;
+                place.iconResource = R.mipmap.ic_construrama;
             } else if (place.iconResource == 5){
-                place.iconResource = R.mipmap.ic_car;
+                place.iconResource = R.mipmap.ic_construrama;
             }
             places.add(place)
         }

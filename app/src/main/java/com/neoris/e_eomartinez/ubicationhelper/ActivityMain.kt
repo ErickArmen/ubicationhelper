@@ -1,5 +1,6 @@
 package com.neoris.e_eomartinez.ubicationhelper
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
@@ -11,9 +12,11 @@ import android.view.MenuItem
 import android.view.View
 
 import android.content.DialogInterface
+import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.text.InputType
 import android.support.v7.app.AlertDialog
+import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -26,6 +29,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.firebase.database.*
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import com.google.maps.android.ui.IconGenerator
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -150,9 +154,9 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val location = p0.getValue(Location::class.java)!!
-                map[p0.key]?.position = LatLng(location.lat, location.lon)
-                //markerAnimator.animateMarker(map[p0.key], LatLng(location.lat, location.lon))
-                //map[p0.key]?.rotation = location.bearing
+                //map[p0.key]?.position = LatLng(location.lat, location.lon)
+                markerAnimator.animateMarker(map[p0.key], LatLng(location.lat, location.lon))
+                map[p0.key]?.rotation = location.bearing
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
@@ -197,6 +201,28 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     private fun showLastRoute() {
         line?.remove()
         val polyLine = PolylineOptions().width(4f).color(Color.BLUE)
+
+        /*firestore.collection("locations").document("99").addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+            if (documentSnapshot != null){
+                val document = documentSnapshot
+                val dateInit = document.data?.keys?.min()?.toLong()
+                val dateLast = document.data?.keys?.max()?.toLong()
+                val diffDate = dateLast?.minus(dateInit!!)
+                Log.i("TESTING", "$dateInit $dateLast $diffDate")
+                val sdf = SimpleDateFormat("mm:ss", Locale.getDefault())
+                tv_elapsed_time.setText(getString(R.string.elapsed_time, sdf.format(diffDate)))
+
+                val orderedMap = document.data?.toSortedMap()
+
+                orderedMap?.values?.forEach {
+                    val location = it as GeoPoint
+                    polyLine.add(LatLng(location.latitude, location.longitude))
+                }
+                line = mMap.addPolyline(polyLine)
+            }
+        }*/
+
+
         firestore.collection("locations").get().addOnCompleteListener {
             if (it.isSuccessful){
                 val size = it.result.size()
