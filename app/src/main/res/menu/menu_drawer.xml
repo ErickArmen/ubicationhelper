@@ -14,24 +14,27 @@
         android:title="Options">
         <menu>
             <item android:id="@+id/action_search"
-                android:title="@string/search"
-                android:icon="@android:drawable/ic_menu_search"/>
-            <item
+                android:title="@string/search" />
+            <!--<item
                 android:id="@+id/Profile"
                 android:title="Profile"
-                android:orderInCategory="10"/>
+                android:orderInCategory="10"/>-->
 
-            <item android:id="@+id/Instructive"
-                android:title="Instructions"
-                android:orderInCategory="11"/>
+            <item android:id="@+id/travels"
+                android:title="Travels"
+                android:orderInCategory="11" />
 
-            <item android:id="@+id/About"
+            <item android:id="@+id/middleware"
+                android:title="Middleware"
+                android:orderInCategory="12" />
+
+            <!--<item android:id="@+id/About"
                 android:title="About"
-                android:orderInCategory="12"/>
+                android:orderInCategory="13"/>-->
 
             <item android:id="@+id/Sign_out"
                 android:title="Sign Out"
-                android:orderInCategory="13"/>
+                android:orderInCategory="14" />
         </menu>
     </item>
 

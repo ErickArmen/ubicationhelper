@@ -2,10 +2,16 @@
     <string name="app_name">UbicationHelper</string>
     <string name="title_activity_main">Map</string>
     <string name="search">Search by Postal Code</string>
-    <string name="postal_code">Código postal %1$s %2$s </string>
+    <string name="postal_code">Postal Code %1$s %2$s </string>
     <string name="no_result">No results found</string>
     <string name="elapsed_time">%1$s mins</string>
     <string name="zone_selected">Selected zone: %1$s</string>
     <string name="no_zone_selected">No zone selected</string>
     <string name="fill_input">Fill the postal code input</string>
+
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">690370994655514</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb690370994655514</string>
+    <string name="logout">Log Out</string>
+
 </resources>

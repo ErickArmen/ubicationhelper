@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">UbicationHelper</string>
     <string name="title_activity_main">Map</string>
-    <string name="search">Search by Postal Code</string>
+    <string name="search">Busca por Código Postal</string>
     <string name="postal_code">Código postal %1$s %2$s </string>
     <string name="no_result">No se encontraron resultados.</string>
     <string name="zone_selected">Zona seleccionada: %1$s</string>

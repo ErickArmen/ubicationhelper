@@ -1,10 +1,12 @@
 package com.neoris.e_eomartinez.ubicationhelper
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.animation.AnimationUtils
 import kotlinx.android.synthetic.main.activity_splash.*
+
 
 class ActivitySplash: AppCompatActivity() {
 
@@ -16,9 +18,14 @@ class ActivitySplash: AppCompatActivity() {
             val animation = AnimationUtils.loadAnimation(this, R.anim.fade_anim)
             text_splash.startAnimation(animation)
             Thread.sleep(2200)
-            startActivity(Intent(this, ActivityMain::class.java))
-            finish()
+            goToMain()
         })
         thread.start()
+    }
+
+    private fun goToMain(){
+        val intent = Intent(this, ActivityMain::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }

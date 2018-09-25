@@ -1,6 +1,7 @@
 package com.neoris.e_eomartinez.ubicationhelper
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -9,41 +10,34 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.GeoPoint
 import com.google.gson.JsonObject
 import com.google.maps.android.PolyUtil
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
 
-class MapController {
+class MapController(private val controllerCallback: MapControllerCallback) {
     private var mZIndex: Int = 0
-    private lateinit var mLstZoneModels: ArrayList<Models.Zone>
+    private var mLstZoneModels: ArrayList<Models.Zone> = ArrayList()
     private lateinit var mCurrentZoneSelected: Models.Zone
-    private lateinit var mControllerCallback: MapControllerCallback
-    private lateinit var mRetrofit: Retrofit;
-
-    constructor(controllerCallback: MapControllerCallback) {
-        this.mControllerCallback = controllerCallback
-        this.mRetrofit = Retrofit.Builder().baseUrl("http://maps.googleapis.com/")
-                .addConverterFactory(GsonConverterFactory.create()).build()
-        this.mLstZoneModels = ArrayList();
-    }
+    private val mRetrofit: InterfaceRetrofit = Retrofit.Builder().baseUrl("http://maps.googleapis.com/")
+            .addConverterFactory(GsonConverterFactory.create()).build().create(InterfaceRetrofit::class.java)
+    private val mRetrofit2 = Retrofit.Builder().baseUrl("https://maps.googleapis.com/")
+            .addConverterFactory(GsonConverterFactory.create()).build().create(InterfaceRetrofit::class.java)
 
     fun fillZones(documents: List<DocumentSnapshot>){
         documents.forEach {
             var zone = Models.Zone( (it["Id"] as Long).toInt(),it["Name"].toString(),
                     it["Description"].toString(),null, it["Color"].toString(),
-                    getPoints(it), getPlaces(it));
+                    getPoints(it), getPlaces(it))
             this.mLstZoneModels.add(zone)
         }
-        this.mControllerCallback.onGetZones(mLstZoneModels)
+        controllerCallback.onGetZones(mLstZoneModels)
         try {
             this.mLstZoneModels.forEach {
-                if (it.id == mCurrentZoneSelected?.id){
-                    mCurrentZoneSelected = it;
-                    mControllerCallback.onCurrentZoneSelected(mCurrentZoneSelected)
+                if (it.id == mCurrentZoneSelected.id){
+                    mCurrentZoneSelected = it
+                    controllerCallback.onCurrentZoneSelected(mCurrentZoneSelected)
                 }
             }
         } catch (ex: Exception){
@@ -55,7 +49,7 @@ class MapController {
         var places = ArrayList<Models.Place>()
         var arrayp = (zoneDocument["Places"] as ArrayList<*>)
         if (arrayp.size == 0)
-            return places;
+            return places
         arrayp.forEach {
             var map = (it as HashMap<*,*>)
             var place = Models.Place(map.get("Title").toString(),
@@ -77,14 +71,14 @@ class MapController {
             }
             places.add(place)
         }
-        return places;
+        return places
     }
 
     fun getPoints(zoneDocument: DocumentSnapshot) : ArrayList<Models.Point>{
         var points = ArrayList<Models.Point>()
         var list = zoneDocument["Points"] as ArrayList<*>
         list.forEach {
-            var gpoint = it as GeoPoint;
+            var gpoint = it as GeoPoint
             points.add(Models.Point(gpoint.latitude, gpoint.longitude))
         }
         return points
@@ -100,7 +94,7 @@ class MapController {
         for (model in this.mLstZoneModels) {
             if (model.getPolygon(null)?.id.equals(polygon.getId(), true)) {
                 this.mCurrentZoneSelected = model
-                this.mControllerCallback.onCurrentZoneSelected(this.mCurrentZoneSelected)
+                controllerCallback.onCurrentZoneSelected(this.mCurrentZoneSelected)
                 break
             }
         }
@@ -109,9 +103,8 @@ class MapController {
     var count = 0;
     fun validatePostalCode(context: Context,postalCode: String,googleMap: GoogleMap ) {
         count += 1
-        val service = this.mRetrofit.create<GMapsService>(GMapsService::class.java)
-        val fullPostalCode = context.resources.getString(R.string.postal_code,postalCode, "");
-        service.requestAddress(fullPostalCode)
+        val fullPostalCode = context.resources.getString(R.string.postal_code,postalCode, "")
+        mRetrofit.requestAddress(fullPostalCode)
                 .enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 try {
@@ -120,19 +113,19 @@ class MapController {
                             ?.asJsonObject?.get("location")
                     var latitude = jsonLocation?.asJsonObject?.get("lat")?.asDouble as Double
                     var longitude = jsonLocation?.asJsonObject?.get("lng")?.asDouble as Double
-                    var position = LatLng(latitude, longitude);
+                    var position = LatLng(latitude, longitude)
                     var isInZones = false;
                     var postalCodeZone: Models.Zone? = null
                     for (zone in mLstZoneModels) {
                         isInZones = PolyUtil.containsLocation(
                                 position,zone.getPolygon(googleMap)?.points, isInZones)
                         if (isInZones){
-                            postalCodeZone = zone;
+                            postalCodeZone = zone
                             break;
                         }
                     }
                     count = 0;
-                    mControllerCallback.onPostalCodeValidationResponse(fullPostalCode, position,
+                    controllerCallback.onPostalCodeValidationResponse(fullPostalCode, position,
                             isInZones, postalCodeZone)
                 } catch (ex: Exception) {
                     if (count <= 3)
@@ -161,4 +154,16 @@ class MapController {
         this.mLstZoneModels.clear()
     }
 
+    fun getDirections(origin: String , destination: String){
+        mRetrofit2.requestDirections(origin, destination).enqueue(object: Callback<JsonObject>{
+
+            override fun onResponse(call: Call<JsonObject>?, response: Response<JsonObject>?) {
+                Log.i("Testing", response.toString())
+            }
+
+            override fun onFailure(call: Call<JsonObject>?, t: Throwable?) {
+                Log.i("Testing", t?.message)
+            }
+        })
+    }
 }

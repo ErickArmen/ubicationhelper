@@ -11,25 +11,24 @@ import kotlinx.android.synthetic.main.row_time_line.view.*
 class RecyclerCustom(private val list: List<String>, private val mListener: InterfaceListener):
         RecyclerView.Adapter<RecyclerCustom.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.row_time_line, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_time_line, parent, false)
         return ViewHolder(itemView, mListener)
     }
 
     override fun getItemCount(): Int = list.size
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        holder?.textView?.setText(list[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-
+        holder.textView.setText(list[position])
         when{
-            list[position].equals("Bus Station") -> holder?.itemView?.img1?.setImageResource(R.drawable.ic_bus)
-            list[position].equals("Coffee Shop") -> holder?.itemView?.img1?.setImageResource(R.drawable.ic_cafe)
-            list[position].equals("Car Wash") -> holder?.itemView?.img1?.setImageResource(R.drawable.ic_car)
-            list[position].equals("Church") -> holder?.itemView?.img1?.setImageResource(R.drawable.ic_church)
-            list[position].equals("Park") -> holder?.itemView?.img1?.setImageResource(R.drawable.ic_park)
-            list[position].equals("Restaurant") -> holder?.itemView?.img1?.setImageResource(R.drawable.ic_restaurant)
-            list[position].equals("Shop") -> holder?.itemView?.img1?.setImageResource(R.drawable.ic_shop)
+            list[position].equals("Bus Station") -> holder.itemView?.img1?.setImageResource(R.drawable.ic_bus)
+            list[position].equals("Coffee Shop") -> holder.itemView?.img1?.setImageResource(R.drawable.ic_cafe)
+            list[position].equals("Car Wash") -> holder.itemView?.img1?.setImageResource(R.drawable.ic_car)
+            list[position].equals("Church") -> holder.itemView?.img1?.setImageResource(R.drawable.ic_church)
+            list[position].equals("Park") -> holder.itemView?.img1?.setImageResource(R.drawable.ic_park)
+            list[position].equals("Restaurant") -> holder.itemView?.img1?.setImageResource(R.drawable.ic_restaurant)
+            list[position].equals("Shop") -> holder.itemView?.img1?.setImageResource(R.drawable.ic_shop)
         }
     }
 

@@ -13,10 +13,9 @@
         android:id="@+id/mainDrawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         tools:context=".ActivityMain">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -27,29 +26,29 @@
                 android:layout_height="match_parent"
                 tools:context=".ActivityMain" />
 
-            <Button
-                android:id="@+id/btn_show_last_route"
-                android:textAllCaps="false"
-                android:text="Last Route"
-                android:alpha="0.5"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/tv_elapsed_time"
-                android:layout_width="wrap_content"
+            <fragment
+                android:id="@+id/place_fragment_start"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/elapsed_time"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="60dp"/>
+                android:layout_alignParentTop="true"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment" />
+
+            <fragment
+                android:id="@+id/place_fragment_end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/place_fragment_start"
+                android:layout_marginTop="10dp"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment" />
 
             <LinearLayout
+                android:id="@+id/ll_zone"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:orientation="horizontal"
-                android:layout_gravity="bottom"
-                android:background="#000000">
+                android:background="#000000"
+                android:layout_alignParentBottom="true">
+
                 <TextView
                     android:id="@+id/lbl_zone_selected"
                     android:layout_width="match_parent"
@@ -58,19 +57,64 @@
                     android:text="@string/no_zone_selected"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF" />
+
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_show_last_route"
+                android:textAllCaps="false"
+                android:text="Last Route"
+                android:alpha="0.5"
+                android:layout_above="@+id/ll_zone"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="clear"
+                android:text="Clear"
                 android:alpha="0.5"
                 android:textAllCaps="false"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="40dp"/>
+                android:layout_above="@+id/ll_zone"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="10dp"/>
 
-        </FrameLayout>
+            <TextView
+                android:id="@+id/tv_elapsed_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/elapsed_time"
+                android:layout_toEndOf="@+id/btn_show_last_route"
+                android:layout_toStartOf="@+id/btn_clear"
+                android:layout_above="@+id/ll_zone"
+                android:layout_marginBottom="25dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"/>
+
+            <ImageView
+                android:id="@+id/img_ready"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_check_circle_green_24dp"
+                android:alpha="0.6"
+                android:visibility="invisible"
+                android:clickable="false"
+                android:layout_centerInParent="true"/>
+
+            <ImageView
+                android:id="@+id/img_black_back_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:visibility="invisible"
+                android:clickable="false"
+                app:srcCompat="@drawable/ic_arrow_back_black_24dp"/>
+
+        </RelativeLayout>
 
         <android.support.design.widget.NavigationView
             android:id="@+id/mainNaviView"

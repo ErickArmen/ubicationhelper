@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -30,7 +31,7 @@
 
         <activity
             android:name=".ActivitySplash"
-            android:label="@string/title_activity_main">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,11 +40,29 @@
         </activity>
 
         <activity
-            android:name=".ActivityTimeLine"/>
+            android:name=".ActivityTimeLine"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".ActivityJourneys"/>
+            android:name=".ActivityJourneys"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".ActivityMain"/>
+            android:name=".ActivityMain"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ActivitySignIn"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ActivityPrepare"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ActivityTravels"
+            android:screenOrientation="portrait"/>
+        <activity
+        android:name=".ActivityKardex"
+        android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ActivityMiddleWare"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
