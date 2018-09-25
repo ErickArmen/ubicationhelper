@@ -1,6 +1,6 @@
 package com.neoris.e_eomartinez.core.di
 
-//import com.neoris.e_eomartinez.AndroidApplication
+import com.neoris.e_eomartinez.AndroidApplication
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 
@@ -12,5 +12,5 @@ interface ComponentApp {
         fun build(): ComponentApp
     }
 
-    //fun inject (androidApp: AndroidApplication)
+    fun inject (androidApp: AndroidApplication)
 }

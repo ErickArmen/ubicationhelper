@@ -8,7 +8,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import javax.inject.Inject
 
-/*
+
 class AndroidApplication: Application(), HasActivityInjector {
 
     @Inject
@@ -21,4 +21,4 @@ class AndroidApplication: Application(), HasActivityInjector {
 
     override fun activityInjector(): AndroidInjector<Activity> = dispatchingActivityInjector
 
-}*/
+}
