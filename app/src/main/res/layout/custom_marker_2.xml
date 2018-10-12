@@ -6,31 +6,33 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/rl_text"
+    <LinearLayout
+        android:id="@+id/ll_container_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:background="#000"
-        android:elevation="8dp"
-        android:alpha="0.8"
-        app:layout_constraintBottom_toTopOf="@+id/img_pin"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="35dp"
+        android:alpha="0.7"
+        android:background="#000">
 
         <TextView
+            android:text="San Pedro"
             android:id="@+id/tv_marker_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
+            android:textColor="#FFF"
             android:textSize="22sp" />
 
-    </RelativeLayout>
+    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/img_pin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/ll_container_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@mipmap/ic_marker_green"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -13,7 +13,7 @@
         android:id="@+id/mainDrawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ActivityMain">
+        tools:context="com.neoris.e_eomartinez.features.map.presentation.ActivityMain">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,7 +24,7 @@
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".ActivityMain" />
+                tools:context="com.neoris.e_eomartinez.features.map.presentation.ActivityMain" />
 
             <fragment
                 android:id="@+id/place_fragment_start"
@@ -94,7 +94,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"/>
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/img_ready"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
                 android:alpha="0.6"
                 android:visibility="invisible"
                 android:clickable="false"
-                android:layout_centerInParent="true"/>
+                android:layout_centerInParent="true"/>-->
 
             <ImageView
                 android:id="@+id/img_black_back_arrow"
@@ -127,5 +127,41 @@
             app:menu="@menu/menu_drawer" />
 
     </android.support.v4.widget.DrawerLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:clipToPadding="true"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="85dp"
+        android:background="@drawable/bottom_sheet_grey"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <Button
+            android:id="@+id/btn_sheet_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Accept"
+            android:background="@drawable/rounded_background_black"
+            android:textColor="@color/colorWhite"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="16dp"/>
+
+        <Button
+            android:id="@+id/btn_sheet_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background_black"
+            android:textColor="@color/colorWhite"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="16dp"/>
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.design.widget.CoordinatorLayout>

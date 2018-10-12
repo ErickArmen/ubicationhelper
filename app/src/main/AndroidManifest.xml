@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.neoris.e_eomartinez.AndroidApplication"
+        android:name=".AndroidApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -30,7 +30,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ActivitySplash"
+            android:name="com.neoris.e_eomartinez.ubicationhelper.features.login.presentation.ActivitySplash"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,28 +40,28 @@
         </activity>
 
         <activity
-            android:name=".ActivityTimeLine"
+            android:name="com.neoris.e_eomartinez.ubicationhelper.features.journeys.presentation.activities.ActivityTimeLine"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ActivityJourneys"
+            android:name="com.neoris.e_eomartinez.ubicationhelper.features.journeys.presentation.activities.ActivityJourneys"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ActivityMain"
+            android:name="com.neoris.e_eomartinez.ubicationhelper.features.map.presentation.activities.ActivityMain"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ActivitySignIn"
+            android:name="com.neoris.e_eomartinez.ubicationhelper.features.login.presentation.ActivitySignIn"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ActivityPrepare"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ActivityTravels"
+            android:name="com.neoris.e_eomartinez.ubicationhelper.features.travels.presentation.activities.ActivityTravels"
             android:screenOrientation="portrait"/>
         <activity
-        android:name=".ActivityKardex"
+        android:name="com.neoris.e_eomartinez.ubicationhelper.features.travels.presentation.activities.ActivityKardex"
         android:screenOrientation="portrait"/>
         <activity
-            android:name=".ActivityMiddleWare"
+            android:name="com.neoris.e_eomartinez.ubicationhelper.features.middleware.presentation.ActivityMiddleWare"
             android:screenOrientation="portrait"/>
     </application>
 

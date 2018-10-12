@@ -7,7 +7,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ActivityKardex">
+    tools:context="com.neoris.e_eomartinez.ubicationhelper.features.travels.presentation.activities.ActivityKardex">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

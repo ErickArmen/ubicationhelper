@@ -15,6 +15,6 @@
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintStart_toStartOf="parent"
        map:layout_constraintTop_toTopOf="parent"
-        tools:context=".ActivityMain" />
+        tools:context="com.neoris.e_eomartinez.features.map.presentation.ActivityMain" />
 
 </android.support.constraint.ConstraintLayout>
