@@ -1,13 +1,11 @@
 package com.neoris.e_eomartinez.ubicationhelper.features.middleware.presentation
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TimePicker
 import android.widget.Toast
 import com.neoris.e_eomartinez.ubicationhelper.R
 import com.neoris.e_eomartinez.ubicationhelper.features.middleware.domain.models.Event
-import dagger.android.AndroidInjection
 import dagger.android.DaggerActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_middleware.*

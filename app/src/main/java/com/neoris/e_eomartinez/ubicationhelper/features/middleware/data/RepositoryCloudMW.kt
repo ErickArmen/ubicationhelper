@@ -6,19 +6,15 @@ import com.google.firebase.firestore.SetOptions
 import com.neoris.e_eomartinez.ubicationhelper.core.types.Repository
 import com.neoris.e_eomartinez.ubicationhelper.features.middleware.domain.models.Event
 import io.reactivex.Completable
-import io.reactivex.Observable
 import javax.inject.Inject
 
-class RepositoryMiddleWare @Inject constructor(): Repository<Int, Event> {
+class RepositoryCloudMW @Inject constructor(): Repository<Nothing, Event> {
 
     private val firestore = FirebaseFirestore.getInstance()
-
-    override fun getData(param: String): Observable<Int> = Observable.just(1)
 
     override fun setData(param: Event): Completable =
 
             Completable.create{ emitter ->
-
                 firestore.collection(param.id).get().addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val size = task.result.size()

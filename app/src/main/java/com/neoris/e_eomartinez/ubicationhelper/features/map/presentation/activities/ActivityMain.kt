@@ -1,9 +1,9 @@
 package com.neoris.e_eomartinez.ubicationhelper.features.map.presentation.activities
 
 import android.app.Activity
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.graphics.Color
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -11,11 +11,11 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 
-import android.os.Handler
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomSheetBehavior
 import android.text.InputType
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -33,6 +33,9 @@ import com.google.firebase.database.*
 import com.google.firebase.firestore.*
 import com.neoris.e_eomartinez.ubicationhelper.*
 import com.neoris.e_eomartinez.ubicationhelper.R
+import com.neoris.e_eomartinez.ubicationhelper.core.extensions.observe
+import com.neoris.e_eomartinez.ubicationhelper.core.extensions.toast
+import com.neoris.e_eomartinez.ubicationhelper.core.extensions.viewModel
 import com.neoris.e_eomartinez.ubicationhelper.features.journeys.presentation.activities.ActivityTimeLine
 import com.neoris.e_eomartinez.ubicationhelper.features.login.presentation.ActivitySignIn
 import com.neoris.e_eomartinez.ubicationhelper.features.map.domain.models.Location
@@ -43,6 +46,7 @@ import com.neoris.e_eomartinez.ubicationhelper.features.map.presentation.viewmod
 import com.neoris.e_eomartinez.ubicationhelper.features.middleware.presentation.ActivityMiddleWare
 import com.neoris.e_eomartinez.ubicationhelper.features.travels.presentation.activities.ActivityTravels
 import dagger.android.AndroidInjection
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
@@ -58,7 +62,8 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         GoogleMap.OnMapClickListener, GoogleMap.OnPolygonClickListener,
         MapController.MapControllerCallback {
 
-    @Inject lateinit var viewModel: ViewModelMap
+    @Inject lateinit var vmFactory: ViewModelProvider.Factory
+    private lateinit var viewModelMap: ViewModelMap
     private lateinit var mMap: GoogleMap
     private val firestore = FirebaseFirestore.getInstance()
     private var line: Polyline? = null
@@ -93,7 +98,11 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         if (!isUserLogged())
             goToLogin()
 
-        getDriversKeys()
+        viewModelMap = viewModel(vmFactory){
+            observe(disposable, keys,
+                    onNext = ::saveKeysOnMap,
+                    onError = {toast(it.message, Toast.LENGTH_LONG)})
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -106,9 +115,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         btn_clear.setOnClickListener(this)
         btn_sheet_accept.setOnClickListener(this)
         btn_sheet_cancel.setOnClickListener(this)
-        //img_ready.setOnClickListener(this)
         img_black_back_arrow.setOnClickListener(this)
-        //setBubbleFactory()
         tv_elapsed_time.text = ""
         initVars()
         initPlaceTexts()
@@ -122,12 +129,12 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         initListeners()
-        Handler().postDelayed({listenFirebase()}, 3000)
+        viewModelMap.loadDriverKeys()
     }
 
     private fun initVars() {
-        this.mMapCenterLatLng = LatLng(25.675437, -100.416310)
-        this.mController = MapController(this)
+        mMapCenterLatLng = LatLng(25.675437, -100.416310)
+        mController = MapController(this)
     }
 
     private fun initListeners() {
@@ -152,11 +159,6 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
 
     private fun listenFirebase() {
 
-        /*val marker1 = googleMap.addMarker(MarkerOptions().position(LatLng(0.0, 0.0))
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking)))
-        val marker2 = googleMap.addMarker(MarkerOptions().position(LatLng(0.0, 0.0))
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking)))*/
-
         val map = HashMap<String, Marker>()
         Log.i("TESTING", keyMap.size.toString())
         keyMap.forEach {
@@ -164,90 +166,27 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking)))
         }
 
-        /*for (i in 0..keyMapSize){
-            map.put(keyMap[i], googleMap.addMarker(MarkerOptions().position(LatLng(0.0, 0.0))
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car_tracking))))
-        }*/
-
         markerAnimator = MarkerAnimator(mMap)
 
         database.addChildEventListener(object: ChildEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val location = p0.getValue(Location::class.java)!!
-                //map[p0.key]?.position = LatLng(location.lat, location.lon)
                 markerAnimator.animateMarker(map[p0.key], LatLng(location.lat, location.lon))
                 map[p0.key]?.rotation = location.bearing
             }
 
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {}
+            override fun onChildRemoved(p0: DataSnapshot) {}
 
         })
-
-        /*keyMap.values.forEach {
-            database.child()
-        }
-
-        database.child(keyMap[])*/
-
-
-
-
-        /*database.child("driver_1").addValueEventListener(object: ValueEventListener{
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.getValue(Location::class.java) != null){
-                    val location = p0.getValue(Location::class.java)!!
-                    marker1.position = LatLng(location.lat, location.lon)
-                }
-            }
-            override fun onCancelled(p0: DatabaseError) {}
-        })
-
-        database.child("driver_2").addValueEventListener(object: ValueEventListener{
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.getValue(Location::class.java) != null){
-                    val location = p0.getValue(Location::class.java)!!
-                    marker2.position = LatLng(location.lat, location.lon)
-                }
-
-            }
-            override fun onCancelled(p0: DatabaseError) {}
-        })*/
     }
 
     private fun showLastRoute() {
         line?.remove()
         val polyLine = PolylineOptions().width(4f).color(Color.BLUE)
-
-        /*firestore.collection("locations").document("99").addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-            if (documentSnapshot != null){
-                val document = documentSnapshot
-                val dateInit = document.data?.keys?.min()?.toLong()
-                val dateLast = document.data?.keys?.max()?.toLong()
-                val diffDate = dateLast?.minus(dateInit!!)
-                Log.i("TESTING", "$dateInit $dateLast $diffDate")
-                val sdf = SimpleDateFormat("mm:ss", Locale.getDefault())
-                tv_elapsed_time.setText(getString(R.string.elapsed_time, sdf.format(diffDate)))
-
-                val orderedMap = document.data?.toSortedMap()
-
-                orderedMap?.values?.forEach {
-                    val location = it as GeoPoint
-                    polyLine.add(LatLng(location.latitude, location.longitude))
-                }
-                line = mMap.addPolyline(polyLine)
-            }
-        }*/
-
 
         firestore.collection("driver_1").get().addOnCompleteListener {
             if (it.isSuccessful){
@@ -282,9 +221,8 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         line?.remove()
         tv_elapsed_time.text = ""
         mMap.clear()
+        listenFirebase()
         getZones()
-        getDriversKeys()
-        Handler().postDelayed({listenFirebase()}, 3000)
     }
 
     private fun goToPrepare(){
@@ -301,17 +239,10 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    private fun getDriversKeys(){
-        disposable.add(viewModel.getDriversKeys().subscribe(
-                {
-                    keyMap[it] = it
-                },
-                {
-                    Toast.makeText(this@ActivityMain, it.message, Toast.LENGTH_LONG).show()
-                }
-        ))
+    private fun saveKeysOnMap(key: String) {
+        keyMap[key] = key
+        listenFirebase()
     }
-
 
     private fun isUserLogged(): Boolean = FirebaseAuth.getInstance().currentUser != null
 
@@ -449,16 +380,6 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
             view.isClickable = false
         }
     }
-
-    /*private fun setBubbleFactory() {
-        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        myView = inflater.inflate(R.layout.custom_marker_2, null, false)
-        bubbleFactory = IconGenerator(this)
-        bubbleFactory.apply {
-            setContentView(myView)
-            setBackground(ColorDrawable(Color.TRANSPARENT))
-        }
-    }*/
 
     private fun goToTravels(){
         startActivity(Intent(this, ActivityTravels::class.java))

@@ -2,14 +2,12 @@ package com.neoris.e_eomartinez.ubicationhelper.features.travels.presentation.ac
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.Toast
 import com.neoris.e_eomartinez.ubicationhelper.R
 import com.neoris.e_eomartinez.ubicationhelper.core.network.InterfaceListener
 import com.neoris.e_eomartinez.ubicationhelper.features.travels.presentation.recyclers.RecyclerTravels
 import com.neoris.e_eomartinez.ubicationhelper.features.travels.presentation.viewmodels.ViewModelTravels
-import dagger.android.AndroidInjection
 import dagger.android.DaggerActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_travels.*
@@ -39,7 +37,7 @@ class ActivityTravels: DaggerActivity(), InterfaceListener {
 
     private fun getFirestoreList() {
 
-        disposable.add(viewModel.getTravels().filter {s ->
+        disposable.add(viewModel.getTravels()./*filter {s ->
             var itemRepeated = true
             for (i in adapter.itemCount-1 downTo 0){
                 if (s.equals(adapter.getItem(i))){
@@ -48,7 +46,7 @@ class ActivityTravels: DaggerActivity(), InterfaceListener {
                 }
             }
             itemRepeated
-        }.subscribe(
+        }.*/subscribe(
                 {
                     adapter.addItem(it)
                     adapter.notifyItemInserted(adapter.itemCount)

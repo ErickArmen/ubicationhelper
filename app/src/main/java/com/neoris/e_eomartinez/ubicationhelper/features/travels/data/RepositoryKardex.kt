@@ -9,8 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class RepositoryKardex @Inject constructor(): Repository<Kardex, Kardex> {
-
+class RepositoryKardex @Inject constructor(): Repository<Observable<Kardex>, Nothing> {
 
     override fun getData(param: String): Observable<Kardex> =
 
@@ -32,6 +31,4 @@ class RepositoryKardex @Inject constructor(): Repository<Kardex, Kardex> {
                             }
                         }
             }
-
-    override fun setData(param: Kardex): Completable = Completable.complete()
 }

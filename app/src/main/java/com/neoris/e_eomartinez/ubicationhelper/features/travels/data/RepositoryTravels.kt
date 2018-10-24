@@ -7,7 +7,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class RepositoryTravels @Inject constructor(): Repository<String, Kardex> {
+class RepositoryTravels @Inject constructor(): Repository<Observable<String>, Nothing> {
 
     override fun getData(param: String): Observable<String> =
 
@@ -26,7 +26,4 @@ class RepositoryTravels @Inject constructor(): Repository<String, Kardex> {
                         }
                     }
         }
-
-    override fun setData(param: Kardex): Completable = Completable.complete()
-
 }

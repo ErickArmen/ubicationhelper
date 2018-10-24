@@ -1,6 +1,7 @@
 package com.neoris.e_eomartinez.ubicationhelper.core.di
 
 import com.neoris.e_eomartinez.ubicationhelper.BuildConfig
+import com.neoris.e_eomartinez.ubicationhelper.core.di.viewmodel.ModuleViewModel
 import com.neoris.e_eomartinez.ubicationhelper.core.network.InterfaceRetrofit
 import dagger.Module
 import dagger.Provides
@@ -10,7 +11,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 
-@Module
+@Module(includes = [ModuleViewModel::class])
 class ModuleApp {
 
     @Singleton
@@ -32,5 +33,15 @@ class ModuleApp {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(InterfaceRetrofit::class.java)
+
+    /*@Singleton
+    @Provides
+    @Named("Keys")
+    fun injectRepositoryKeys(): Repository<String, String> = RepositoryCloudKeys()*/
+
+    /*@Singleton
+    @Provides
+    @Named("MiddleWare")
+    fun injectRepositoryMW(): RepositoryMiddleWare = RepositoryCloudMW()*/
 }
 

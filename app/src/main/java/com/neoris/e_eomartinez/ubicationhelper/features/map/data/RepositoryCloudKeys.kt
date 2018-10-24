@@ -1,15 +1,15 @@
 package com.neoris.e_eomartinez.ubicationhelper.features.map.data
 
+import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.neoris.e_eomartinez.ubicationhelper.core.types.Repository
-import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class RepositoryMap @Inject constructor(): Repository<String, String> {
+class RepositoryCloudKeys @Inject constructor(): Repository<Observable<String>, Nothing> {
 
     private val database = FirebaseDatabase.getInstance().reference
 
@@ -17,10 +17,11 @@ class RepositoryMap @Inject constructor(): Repository<String, String> {
 
             Observable.create { emitter ->
 
-                database.addListenerForSingleValueEvent(object: ValueEventListener {
-
+                database.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(p0: DataSnapshot) {
-                        p0.children.forEach{
+                        Log.i("TESTING datasnap", p0.toString())
+                        p0.children.forEach {
+                            Log.i("TESTING key", it.key!!)
                             emitter.onNext(it.key!!)
                         }
                     }
@@ -30,6 +31,4 @@ class RepositoryMap @Inject constructor(): Repository<String, String> {
                     }
                 })
             }
-
-    override fun setData(param: String): Completable = Completable.complete()
 }

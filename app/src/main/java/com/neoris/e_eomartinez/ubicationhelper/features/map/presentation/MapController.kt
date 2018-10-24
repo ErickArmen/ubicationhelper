@@ -149,7 +149,7 @@ class MapController(private val controllerCallback: MapControllerCallback) {
         fun onPostalCodeValidationResponse(postalCode: String, position: LatLng, isInZone: Boolean, zone: Models.Zone?)
     }
 
-    fun clearMap(googleMap: GoogleMap): Unit{
+    fun clearMap(googleMap: GoogleMap){
             this.mLstZoneModels.forEach {
                 it.getPolygon(googleMap)?.remove()
             }

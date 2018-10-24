@@ -6,8 +6,8 @@ import com.neoris.e_eomartinez.ubicationhelper.features.travels.domain.models.Ka
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class GetKardex @Inject constructor(private val repository: RepositoryKardex): UseCase {
+class GetKardex @Inject constructor(private val repository: RepositoryKardex): UseCase<String, Observable<Kardex>> {
 
-    fun getKardex(documentId: String): Observable<Kardex> = repository.getData(documentId)
+    override fun run(param: String): Observable<Kardex> = repository.getData(param)
 
 }
