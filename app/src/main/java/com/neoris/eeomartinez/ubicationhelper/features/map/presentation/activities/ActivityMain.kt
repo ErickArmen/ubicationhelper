@@ -41,7 +41,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 import kotlin.collections.HashMap
 
-
 class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
         NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
 
@@ -57,7 +56,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     private lateinit var viewModelMap: ViewModelMap
     private lateinit var mMap: GoogleMap
     private var line: Polyline? = null
-    private var mMapCenterLatLng = LatLng(25.6777588, -100.3152597)
+    private var mMapCenterLatLng = LatLng(25.675437, -100.416310)
     private var mDefaultZoom = 13f
     private var mapMarkers = HashMap<String, Marker>()
     private lateinit var startPlaceFragment: PlaceAutocompleteFragment
