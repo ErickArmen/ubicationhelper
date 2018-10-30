@@ -5,21 +5,8 @@
     tools:showIn="navigation_view">
 
     <item
-        android:id="@+id/journeys"
-        android:title="Journeys"
-        android:orderInCategory="0"
-        android:icon="@mipmap/ic_bus" />
-
-    <item
         android:title="Options">
         <menu>
-            <item android:id="@+id/action_search"
-                android:title="@string/search" />
-            <!--<item
-                android:id="@+id/Profile"
-                android:title="Profile"
-                android:orderInCategory="10"/>-->
-
             <item android:id="@+id/travels"
                 android:title="Travels"
                 android:orderInCategory="11" />
@@ -27,10 +14,6 @@
             <item android:id="@+id/middleware"
                 android:title="Middleware"
                 android:orderInCategory="12" />
-
-            <!--<item android:id="@+id/About"
-                android:title="About"
-                android:orderInCategory="13"/>-->
 
             <item android:id="@+id/Sign_out"
                 android:title="Sign Out"

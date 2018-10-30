@@ -5,34 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorRedLight"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imgSplash"
+    <com.airbnb.lottie.LottieAnimationView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
+        app:lottie_autoPlay="true"
         android:layout_centerInParent="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_bus" />
-
-    <TextView
-        android:id="@+id/text_splash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imgSplash"
-        android:layout_centerHorizontal="true"
-        android:text="UbicationHelper"
-        android:textColor="@color/colorWhite"
-        android:textSize="30sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="@+id/imgSplash"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:lottie_loop="true"
+        app:lottie_fileName="material_loading_animation_2.json"/>
 
 </RelativeLayout>

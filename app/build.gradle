@@ -27,9 +27,8 @@ android {
         }
 
         debug {
-            buildConfigField("String", 'API_KEY_DIRECTIONS', "\"AIzaSyA0eCkUJm8EdtdAsa2d-PZNkicwB3onQ4w\"")
+            buildConfigField("String", 'API_KEY_DIRECTIONS', "\"ABC\"")
             buildConfigField("String", 'directions', "\"https://maps.googleapis.com/\"")
-            buildConfigField("String", 'geocode', "\"http://maps.googleapis.com/\"")
         }
     }
 }
@@ -64,4 +63,5 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.airbnb.android:lottie:2.7.0'
 }
