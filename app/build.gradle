@@ -27,7 +27,7 @@ android {
         }
 
         debug {
-            buildConfigField("String", 'API_KEY_DIRECTIONS', "\"ABC\"")
+            buildConfigField("String", 'API_KEY_DIRECTIONS', "\"ABCD\"")
             buildConfigField("String", 'directions', "\"https://maps.googleapis.com/\"")
         }
     }
