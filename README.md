@@ -1,6 +1,6 @@
 # UbicationHelper
 
-This is a demo for a ride sharing app, showcasing using Kotlin in a more idiomatic and expressive way.
+This is a demo for a ride sharing app, showcasing using Kotlin in a more idiomatic and expressive way, division by features using Clean Architecture.
 
 The app was divided by features (can be easily modularized if needed), this kind of structure is good in a big enterprise enviroment, 
 because you can assign your resources by features, therefore the developer experience is better, one reason is that you can avoid more 
