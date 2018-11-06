@@ -10,8 +10,8 @@
     <string name="fill_input">Fill the postal code input</string>
 
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
-    <string name="facebook_application_id" translatable="false">690370994655514</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fb690370994655514</string>
+    <string name="facebook_application_id" translatable="false">replace</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">replace</string>
     <string name="logout">Log Out</string>
     <string name="request_on_way">Your request is on the way</string>
     <string name="accept">Accept</string>

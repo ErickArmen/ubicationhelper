@@ -56,7 +56,7 @@ class ActivityMain : AppCompatActivity(), OnMapReadyCallback,
     private lateinit var viewModelMap: ViewModelMap
     private lateinit var mMap: GoogleMap
     private var line: Polyline? = null
-    private var mMapCenterLatLng = LatLng(25.675437, -100.416310)
+    private var mMapCenterLatLng = LatLng(25.6837808, -100.3185257)
     private var mDefaultZoom = 13f
     private var mapMarkers = HashMap<String, Marker>()
     private lateinit var startPlaceFragment: PlaceAutocompleteFragment
