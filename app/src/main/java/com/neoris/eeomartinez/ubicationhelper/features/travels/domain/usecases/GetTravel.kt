@@ -6,6 +6,7 @@ import com.neoris.eeomartinez.ubicationhelper.features.travels.data.RepositoryTr
 import io.reactivex.Observable
 import javax.inject.Inject
 
+@Deprecated("Replaced by Paging library (Datasource and PagedListAdapter")
 class GetTravel @Inject constructor(private val repository: RepositoryTravels): UseCase<None, Observable<String>>{
 
     private val list = mutableListOf<String>()

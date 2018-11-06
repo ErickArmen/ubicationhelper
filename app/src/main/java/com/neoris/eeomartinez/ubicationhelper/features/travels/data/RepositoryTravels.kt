@@ -5,6 +5,7 @@ import com.neoris.eeomartinez.ubicationhelper.core.types.Repository
 import io.reactivex.Observable
 import javax.inject.Inject
 
+@Deprecated("Replaced by Paging library (Datasource and PagedListAdapter")
 class RepositoryTravels @Inject constructor(): Repository<Observable<String>, Nothing> {
 
     companion object {

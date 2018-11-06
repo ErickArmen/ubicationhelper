@@ -1,15 +1,30 @@
 package com.neoris.eeomartinez.ubicationhelper.features.travels.presentation.viewmodels
 
 import android.arch.lifecycle.ViewModel
-import com.neoris.eeomartinez.ubicationhelper.core.types.UseCase.None
-import com.neoris.eeomartinez.ubicationhelper.features.travels.domain.usecases.GetTravel
-import io.reactivex.subjects.PublishSubject
+import android.arch.paging.PagedList
+import android.arch.paging.RxPagedListBuilder
+import com.neoris.eeomartinez.ubicationhelper.features.travels.presentation.recyclers.DataSourceFactory
+import io.reactivex.Observable
 import javax.inject.Inject
 
-class ViewModelTravels @Inject constructor(private val getTravel: GetTravel):ViewModel() {
+class ViewModelTravels @Inject constructor(private val dataSourceFactory: DataSourceFactory):ViewModel() {
 
-    val travels: PublishSubject<String> = PublishSubject.create()
+    val travelList2: Observable<PagedList<String>>
 
-    fun getTravels() = getTravel(None()){ it.subscribe(travels) }
+    init {
+        val config = PagedList.Config.Builder()
+                .setPageSize(10)
+                .setInitialLoadSizeHint(10)
+                .setEnablePlaceholders(false)
+                .build()
+
+        travelList2 = RxPagedListBuilder<String, String>(dataSourceFactory, config)
+                .setInitialLoadKey("0")
+                .buildObservable()
+    }
+
+    fun onDestroy(){
+        dataSourceFactory.onDestroy()
+    }
 
 }
